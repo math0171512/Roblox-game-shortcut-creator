@@ -4,8 +4,15 @@ import requests,json,urllib.request,PIL.Image,os
 
 from tkinter import *
 
-saveplace = os.path.join(r"C:\Users",os.environ.get("USERNAME"))
+saveplace = os.path.join(os.path.join(r"C:\Users",os.environ.get("USERNAME")))
 desktop = os.path.join(saveplace,"Desktop")
+saveplace = os.path.join(saveplace,r"AppData\Local\robloxgameicons")
+
+if not os.path.exists(saveplace):
+    print("no folder in appdata exists, making it")
+    os.mkdir(saveplace)
+else:
+    print("it already exists, extremely awesome")
 
 def CreateShortcut(gameplaceid,name):
 
@@ -23,7 +30,7 @@ def CreateShortcut(gameplaceid,name):
     universeid = json.loads(universedata.content)["universeId"]
 
     if universeid == None:
-        report.configure(text="Can't create. This game ID Doesn't exist.")
+        report.configure(text="Can't create. This game ID doesn't exist.")
         return False
     
     gameicon = json.loads(requests.get(f"https://thumbnails.roblox.com/v1/games/icons?universeIds={universeid}&returnPolicy=PlaceHolder&size=50x50&format=Png&isCircular=false").content)
@@ -39,7 +46,9 @@ def CreateShortcut(gameplaceid,name):
     except:
         print("already gone")
         pass
-
+    
+    print("got through")
+    
     image.save(icoplace,format="ICO")
 
     shell = Dispatch("WScript.Shell")
